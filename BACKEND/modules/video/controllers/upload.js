@@ -164,7 +164,7 @@ await prisma.video.create({
         Bucket: process.env.S3_RAW_BUCKET,
         Key: s3Key,
         ContentType: mimeType,
-        ContentLength: fileSize,
+          // ContentLength: fileSize,
       });
 
       const uploadUrl = await getSignedUrl(s3, command, {
