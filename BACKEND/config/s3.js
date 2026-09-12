@@ -8,6 +8,8 @@ const s3 = new S3Client({
     secretAccessKey: process.env.S3_SECRET_KEY,
   },
   forcePathStyle: true,
+    requestChecksumCalculation: "WHEN_REQUIRED", // don't auto-attach checksums to presigned URLs
+
 });
   
 module.exports = { s3 };
