@@ -1,15 +1,15 @@
 const Redis = require("ioredis");
-console.log("REDIS_URL:", process.env.REDIS_URL?.slice(0, 50)); 
+
 const redis = process.env.REDIS_URL
-  ? new Redis(process.env.REDIS_URL, {
-      tls: { rejectUnauthorized: false },
-      maxRetriesPerRequest: null,
-      enableReadyCheck: false,
-    })
+  ? new Redis(process.env.REDIS_URL)
   : new Redis({
-      host: "localhost",
-      port: 6379,
+      host: process.env.REDIS_HOST || "localhost",
+      port: parseInt(process.env.REDIS_PORT) || 6379,
+      ...(process.env.REDIS_PASSWORD && { password: process.env.REDIS_PASSWORD }),
+      ...(process.env.REDIS_TLS === "true" && { tls: {} }),
     });
+
+redis.on("error", (err) => console.error("Redis error:", err.message));
 
 module.exports = redis;
 // const redis = new Redis({

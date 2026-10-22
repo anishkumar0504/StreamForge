@@ -1,33 +1,26 @@
 const Redis = require("ioredis");
 
 const publisher = new Redis(process.env.REDIS_URL, {
-  tls: { rejectUnauthorized: false },
-  maxRetriesPerRequest: null,
-  enableReadyCheck: false,
+  maxRetriesPerRequest: 2,
+  enableReadyCheck: true,
+  lazyConnect: true,
+});
+
+publisher.on("error", (err) => {
+  console.error("Redis publisher error:", err.message);
 });
 
 const publishVideoUpdate = async (userId, videoId, data) => {
-  await publisher.publish(
-    "video:updates",
-    JSON.stringify({ userId, videoId, ...data })
-  );
+  try {
+    await publisher.publish(
+      "video:updates",
+      JSON.stringify({ userId, videoId, ...data })
+    );
+  } catch (err) {
+    console.error("publishVideoUpdate failed:", err.message);
+  }
 };
 
-module.exports = { publishVideoUpdate };
-// const Redis = require("ioredis");
+const closePublisher = () => publisher.quit();
 
-// const publisher = new Redis({
-//   host: process.env.REDIS_HOST || "localhost",
-//   port: parseInt(process.env.REDIS_PORT) || 6379,
-//   ...(process.env.REDIS_PASSWORD && { password: process.env.REDIS_PASSWORD }),
-//   ...(process.env.REDIS_TLS === "true" && { tls: {} }),
-// });
-
-// const publishVideoUpdate = async (userId, videoId, data) => {
-//   await publisher.publish(
-//     "video:updates",
-//     JSON.stringify({ userId, videoId, ...data })
-//   );
-// };
-
-// module.exports = { publishVideoUpdate };
+module.exports = { publishVideoUpdate, closePublisher };

@@ -24,9 +24,9 @@ const {
 
   // S3 CLIENT
   const {s3}  = require("./config/s3");
-console.log("REDIS_URL from worker.js:", process.env.REDIS_URL?.slice(0, 50));
-console.log("REDIS_HOST:", process.env.REDIS_HOST);
-console.log("REDIS_PORT:", process.env.REDIS_PORT);
+// console.log("REDIS_URL from worker.js:", process.env.REDIS_URL?.slice(0, 50));
+// console.log("REDIS_HOST:", process.env.REDIS_HOST);
+// console.log("REDIS_PORT:", process.env.REDIS_PORT);
   // TEMP DIRECTORY (CROSS-PLATFORM)
   const BASE_TEMP_DIR = path.join(os.tmpdir(), "yt-worker");
   if (!fs.existsSync(BASE_TEMP_DIR)) {
@@ -421,19 +421,31 @@ endTranscode();
           fs.rmSync(outputDir, { recursive: true, force: true });
       }
     },
-    {
-  connection: {
-    host: process.env.REDIS_HOST,
-    port: parseInt(process.env.REDIS_PORT) || 6379,
-    password: process.env.REDIS_PASSWORD,
-    tls: { rejectUnauthorized: false },  
-  },
-  concurrency: 1,
-  limiter: {
-    max: 5,
-    duration: 60000,
-  },
-}
+        {
+      connection: {
+        host: process.env.REDIS_HOST || "localhost",
+        port: parseInt(process.env.REDIS_PORT) || 6379,
+        ...(process.env.REDIS_PASSWORD && { password: process.env.REDIS_PASSWORD }),
+        ...(process.env.REDIS_TLS === "true" && { tls: {} }),
+      },
+      concurrency: 1,
+      drainDelay: 30,
+      stalledInterval: 60000,
+      limiter: { max: 5, duration: 60000 },
+    }
+//     {
+//   connection: {
+//     host: process.env.REDIS_HOST,
+//     port: parseInt(process.env.REDIS_PORT) || 6379,
+//     password: process.env.REDIS_PASSWORD,
+//     tls: { rejectUnauthorized: false },  
+//   },
+//   concurrency: 1,
+//   limiter: {
+//     max: 5,
+//     duration: 60000,
+//   },
+// }
 
 // {
 //   connection: {
@@ -451,21 +463,7 @@ worker.on("error", (err) => {
   console.error("Worker error:", err);
 });
 
-const { Queue } = require("bullmq");
-const testQueue = new Queue("video-processing", {
-  connection: {
-    host: process.env.REDIS_HOST,
-    port: Number(process.env.REDIS_PORT),
-    password: process.env.REDIS_PASSWORD,
-    tls: { rejectUnauthorized: false },
-  },
-});
 
-testQueue.getJobCounts().then(counts => {
-  console.log("Queue job counts:", counts);
-}).catch(err => {
-  console.error("Queue connection test failed:", err.message);
-});
   // --------------------
   // EVENTS
   // --------------------
@@ -510,3 +508,8 @@ cron.schedule("*/14 * * * *", async () => {
   }
 });
 
+process.on("SIGTERM", async () => {
+  await worker.close();
+  await prisma.$disconnect();
+  process.exit(0);
+});

@@ -56,24 +56,24 @@ const Redis = require("ioredis");
 const subscriber = new Redis({
   host: process.env.REDIS_HOST || "localhost",
   port: parseInt(process.env.REDIS_PORT) || 6379,
-  password: process.env.REDIS_PASSWORD,
-  tls: {}
+  ...(process.env.REDIS_PASSWORD && { password: process.env.REDIS_PASSWORD }),
+  ...(process.env.REDIS_TLS === "true" && { tls: {} }),
 });
 
-
-// const subscriber = new Redis({
-//   host: process.env.REDIS_HOST || "localhost",
-//   port: parseInt(process.env.REDIS_PORT) || 6379,
-//   ...(process.env.REDIS_PASSWORD && { password: process.env.REDIS_PASSWORD }),
-//   ...(process.env.REDIS_TLS === "true" && { tls: {} }),
-// });
+subscriber.on("error", (err) => {
+  console.error("Redis subscriber error:", err.message);
+});
 
 subscriber.subscribe("video:updates", (err) => {
-  if (err) console.error("Redis subscribe error:", err);
+  if (err) console.error("Redis subscribe error:", err.message);
   else console.log("Subscribed to video:updates channel");
 });
 
 subscriber.on("message", (channel, message) => {
-  const data = JSON.parse(message);
-  emitToUser(data.userId, "video:update", data);
+  try {
+    const data = JSON.parse(message);
+    emitToUser(data.userId, "video:update", data);
+  } catch (err) {
+    console.error("Bad pubsub message:", err.message);
+  }
 });
