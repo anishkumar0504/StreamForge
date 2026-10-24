@@ -18,4 +18,4 @@ fs.writeFileSync(
   JSON.stringify(users, null, 2)
 )
 
-console.log("✅ 150 users generated")
+console.log(" 150 users generated")

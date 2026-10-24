@@ -14,20 +14,7 @@ const Watch = () => {
   const token = localStorage.getItem("token")
   const [showFullDescription, setShowFullDescription] = useState(false)
 const currentUser = JSON.parse(localStorage.getItem("user") || "null")
-  // const currentUser = (() => {
-  //   if (!token) return null
-  //   try {
-  //     const payload = JSON.parse(atob(token.split(".")[1]))
-  //     return {
-  //       id: payload.id || payload.userId || payload.sub,
-  //       username: payload.username,
-  //       displayName: payload.displayName || payload.username,
-  //       avatarUrl: payload.avatarUrl || null,
-  //     }
-  //   } catch {
-  //     return null
-  //   }
-  // })()
+
 
   const {
     video, setVideo, streamUrl, related, loading,
@@ -37,7 +24,7 @@ const currentUser = JSON.parse(localStorage.getItem("user") || "null")
 
 const {
   watchStartRef, sentViewRef, viewIntervalRef,
-  onVideoPlay, onVideoPause,        // ← use these now
+  onVideoPlay, onVideoPause,        
   sendView, sendWatchTimeUpdate, getWatchDuration
 } = useViewTracking(id, token, API_BASE_URL)
 

@@ -15,9 +15,9 @@ for (let i = 1; i <= TOTAL_USERS; i++) {
 const register = async (user) => {
   try {
     await axios.post(`${BASE_URL}/api/register`, user)
-    console.log(`✅ Registered ${user.email}`)
+    console.log(` Registered ${user.email}`)
   } catch (err) {
-    console.log(`⚠️ Already exists ${user.email}`)
+    console.log(` Already exists ${user.email}`)
   }
 }
 
@@ -31,7 +31,7 @@ const run = async () => {
     JSON.stringify(users, null, 2)
   )
 
-  console.log("🎉 User registration done")
+  console.log(" User registration done")
 }
 
 run()

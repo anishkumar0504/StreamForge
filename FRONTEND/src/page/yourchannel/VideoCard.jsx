@@ -19,7 +19,7 @@ const VideoCard = ({ video, index, handleEditClick, handleDeleteVideo }) => {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-6xl opacity-30">
-            🎬
+            
           </div>
         )}
         

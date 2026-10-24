@@ -14,9 +14,9 @@ const run = async () => {
       })
 
       tokens[user.email] = res.data.token
-      console.log(`🔐 Logged in ${user.email}`)
+      console.log(` Logged in ${user.email}`)
     } catch (err) {
-      console.log(`❌ Login failed ${user.email}`)
+      console.log(` Login failed ${user.email}`)
     }
   }
 
@@ -25,7 +25,7 @@ const run = async () => {
     JSON.stringify(tokens, null, 2)
   )
 
-  console.log("🎉 All tokens stored")
+  console.log(" All tokens stored")
 }
 
 run()

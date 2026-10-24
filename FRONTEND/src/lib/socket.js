@@ -4,7 +4,7 @@ import { io } from "socket.io-client"
 
 
 export const socket = io(SOCKET_URL, {
-  autoConnect: false,          // 🔴 IMPORTANT: prevent early connect
+  autoConnect: false,          
   transports: ["polling", "websocket"],
 })
 

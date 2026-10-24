@@ -23,4 +23,4 @@ fs.writeFileSync(
   JSON.stringify(likes, null, 2)
 )
 
-console.log("✅ Random likes added")
+console.log(" Random likes added")

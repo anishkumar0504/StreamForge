@@ -11,9 +11,9 @@
       const { watchDuration } = req.body;
 
       console.log("\n========== RECORD VIEW REQUEST ==========");
-      console.log("📹 Video ID:", videoId);
-      console.log("👤 User ID:", userId);
-      console.log("⏱️ Watch Duration:", watchDuration);
+      console.log(" Video ID:", videoId);
+      console.log(" User ID:", userId);
+      console.log(" Watch Duration:", watchDuration);
 
       //  Validate duration
       if (typeof watchDuration !== "number" || watchDuration < 0) {

@@ -23,7 +23,7 @@ const getUserLikedStatus = async (userId, commentId) => {
     });
     return !!record;
   } catch {
-    return false; // commentLike table might not exist yet — treat as not liked
+    return false; 
   }
 };
 
@@ -83,7 +83,6 @@ const getComments = async (req, res) => {
         });
         likedSet = new Set(liked.map((l) => l.commentId));
       } catch {
-        // commentLike table not migrated yet — safe to skip
       }
     }
 
@@ -204,7 +203,7 @@ const editComment = async (req, res) => {
     const updated = await prisma.comment.update({
       where: { id: commentId },
       data: { content: content.trim(), isEdited: true },
-      include: commentInclude,  // no commentLikes here — safe always
+      include: commentInclude,  
     });
 
     const isLikedByUser = await getUserLikedStatus(userId, commentId);

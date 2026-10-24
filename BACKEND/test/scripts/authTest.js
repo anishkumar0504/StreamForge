@@ -21,4 +21,4 @@ fs.writeFileSync(
   JSON.stringify(tokens, null, 2)
 )
 
-console.log("✅ JWT generated for all users")
+console.log(" JWT generated for all users")

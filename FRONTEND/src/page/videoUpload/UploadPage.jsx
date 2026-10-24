@@ -186,7 +186,6 @@ const videoIdRef = useRef(null)
       }
       
       xhr.onerror = () => {
-        console.error("❌ Network error during upload")
         reject(new Error("Network error during upload"))
       }
       
@@ -203,7 +202,7 @@ const videoIdRef = useRef(null)
   const submit = async (e) => {
     e.preventDefault()
     if (!video || !title.trim()) {
-      setStatus("⚠️ Please select a video and enter a title")
+      setStatus(" Please select a video and enter a title")
       return
     }
 
@@ -253,9 +252,8 @@ const videoIdRef = useRef(null)
       // WebSocket will handle further status updates
 
     } catch (err) {
-      console.error("❌ Upload error:", err)
       setUploadPhase("failed")
-      setStatus(err.message || "❌ Upload failed. Please try again.")
+      setStatus(err.message || " Upload failed. Please try again.")
       setUploading(false)
       setProgress(0)
     }

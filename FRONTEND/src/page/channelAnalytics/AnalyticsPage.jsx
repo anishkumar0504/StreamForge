@@ -12,7 +12,7 @@ export default function AnalyticsPage() {
 
   useEffect(() => {
     getMyVideos().then(res => {
-            setVideos(res.data.videos)   // ✅ THIS
+            setVideos(res.data.videos)   
 
       setSelectedVideo(res.data[0])
     })

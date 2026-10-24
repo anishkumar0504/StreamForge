@@ -12,8 +12,8 @@ const getTrendingVideos = async () => {
       visibility: "PUBLIC",
     },
     orderBy: [
-      { views: "desc" },       // popularity
-      { createdAt: "desc" },   // freshness
+      { views: "desc" },       
+      { createdAt: "desc" },   
     ],
     take: 50,
     include: {

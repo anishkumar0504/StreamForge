@@ -63,6 +63,11 @@ export function LoginForm({
           <CardTitle className="text-white">Login to your account</CardTitle>
           <CardDescription className="text-gray-400">
             Enter your email below to login to your account
+            <div className="mt-3 rounded-md border border-zinc-800 bg-zinc-900/50 p-3">
+              <p className="mb-1 text-xs font-medium text-gray-500">Test credentials:</p>
+              <p className="text-xs font-mono text-gray-300">Email: test@gmail.com</p>
+              <p className="text-xs font-mono text-gray-300">Pass: 12345678</p>
+            </div>
           </CardDescription>
         </CardHeader>
 

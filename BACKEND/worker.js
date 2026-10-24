@@ -24,45 +24,12 @@ const {
 
   // S3 CLIENT
   const {s3}  = require("./config/s3");
-// console.log("REDIS_URL from worker.js:", process.env.REDIS_URL?.slice(0, 50));
-// console.log("REDIS_HOST:", process.env.REDIS_HOST);
-// console.log("REDIS_PORT:", process.env.REDIS_PORT);
   // TEMP DIRECTORY (CROSS-PLATFORM)
   const BASE_TEMP_DIR = path.join(os.tmpdir(), "yt-worker");
   if (!fs.existsSync(BASE_TEMP_DIR)) {
     fs.mkdirSync(BASE_TEMP_DIR, { recursive: true });
   }
 
-  // GET VIDEO DURATION HELPER WITH EXTENSIVE LOGGING
-  // const getVideoDuration = (filePath) => {
-  //   return new Promise((resolve, reject) => {
-  //     console.log(` [DURATION] Starting ffprobe on: ${filePath}`);
-  //     console.log(` [DURATION] File exists: ${fs.existsSync(filePath)}`);
-      
-  //     if (fs.existsSync(filePath)) {
-  //       const stats = fs.statSync(filePath);
-  //       console.log(` [DURATION] File size: ${stats.size} bytes`);
-  //     }
-      
-  //     ffmpeg.ffprobe(filePath, (err, metadata) => {
-  //       if (err) {
-  //         console.error(` [DURATION] ffprobe error:`, err);
-  //         return reject(err);
-  //       }
-        
-  //       console.log(`[DURATION] Metadata received:`, JSON.stringify(metadata, null, 2));
-        
-  //       if (!metadata || !metadata.format || !metadata.format.duration) {
-  //         console.error(` [DURATION] Missing duration in metadata`);
-  //         return reject(new Error("Duration not found in metadata"));
-  //       }
-        
-  //       const duration = Math.floor(metadata.format.duration);
-  //       console.log(`[DURATION] Extracted duration: ${duration} seconds`);
-  //       resolve(duration);
-  //     });
-  //   });
-  // };
 const getVideoMetadata = (filePath) => {
   return new Promise((resolve, reject) => {
     ffmpeg.ffprobe(filePath, (err, metadata) => {
@@ -402,7 +369,6 @@ endTranscode();
       },
     });
 
-    // ADD THIS RIGHT HERE ↓
 
           } else {
             console.error(` Cannot update - video ${videoId} doesn't exist`);
@@ -433,31 +399,6 @@ endTranscode();
       stalledInterval: 60000,
       limiter: { max: 5, duration: 60000 },
     }
-//     {
-//   connection: {
-//     host: process.env.REDIS_HOST,
-//     port: parseInt(process.env.REDIS_PORT) || 6379,
-//     password: process.env.REDIS_PASSWORD,
-//     tls: { rejectUnauthorized: false },  
-//   },
-//   concurrency: 1,
-//   limiter: {
-//     max: 5,
-//     duration: 60000,
-//   },
-// }
-
-// {
-//   connection: {
-//     host: process.env.REDIS_HOST || "localhost",
-//     port: parseInt(process.env.REDIS_PORT) || 6379,
-//   },
-//   concurrency: 1,
-//   limiter: {
-//     max: 5,
-//     duration: 60000,
-//   },
-// }
   );
 worker.on("error", (err) => {
   console.error("Worker error:", err);

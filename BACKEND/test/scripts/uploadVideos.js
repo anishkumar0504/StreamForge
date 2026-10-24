@@ -18,7 +18,7 @@ const run = async () => {
     const token = randomToken()
 
     try {
-      // 1️⃣ INIT UPLOAD
+      // INIT UPLOAD
       const initRes = await axios.post(
         `${BASE_URL}/api/videos/upload/init`,
         {
@@ -37,7 +37,7 @@ const run = async () => {
 
       const { videoId, uploadUrl } = initRes.data
 
-      // 2️⃣ UPLOAD FILE TO S3 (THIS WAS MISSING)
+      // UPLOAD FILE TO S3 (THIS WAS MISSING)
       await axios.put(uploadUrl, sampleBuffer, {
         headers: {
           "Content-Type": "video/mp4",
@@ -46,7 +46,7 @@ const run = async () => {
         maxBodyLength: Infinity,
         maxContentLength: Infinity,
       })
-      // 3️⃣ COMPLETE UPLOAD
+      // COMPLETE UPLOAD
       await axios.post(
         `${BASE_URL}/api/videos/upload/complete`,
         { videoId },
@@ -56,19 +56,18 @@ const run = async () => {
           },
         }
       )
-// ADD THIS DEBUG CHECK
-console.log(`🔍 Checking if video ${i} exists in DB...`);
+console.log(`Checking if video ${i} exists in DB...`);
 await new Promise(r => setTimeout(r, 1000)); // Wait 1 second
 
-console.log(`🎬 Uploaded video ${i}`);
-      console.log(`🎬 Uploaded video ${i}`)
+console.log(` Uploaded video ${i}`);
+      console.log(` Uploaded video ${i}`)
     } catch (err) {
-      console.log(`❌ Upload failed ${i}`)
+      console.log(` Upload failed ${i}`)
       console.log(err.response?.data || err.message)
     }
   }
 
-  console.log("🎉 Upload script finished")
+  console.log(" Upload script finished")
 }
 
 run()

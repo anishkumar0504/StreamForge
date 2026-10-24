@@ -14,8 +14,7 @@ const EditChannelModal = ({ user, onClose, onUpdated }) => {
   
   // Preview States
   const [avatarPreview, setAvatarPreview] = useState(user?.avatarUrl || null)
-  const [bannerPreview, setBannerPreview] = useState(user?.channelBanner || null) // Adjusted key based on your memory
-  
+  const [bannerPreview, setBannerPreview] = useState(user?.channelBanner || null) 
   const [loading, setLoading] = useState(false)
 
   // Handle Local File Previews

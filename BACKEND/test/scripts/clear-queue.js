@@ -11,7 +11,7 @@ const queue = new Queue("video-processing", {
 });
 
   await queue.obliterate({ force: true });
-  console.log("✅ Queue cleared");
+  console.log("Queue cleared");
   process.exit(0);
 };
 

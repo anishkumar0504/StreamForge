@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { X, Mail, Calendar, User, Loader2, Link as LinkIcon } from 'lucide-react';
 import { API_BASE_URL } from '../../../config/config';
 
-// const API_BASE_URL = "http://localhost:8000";
 
 const formatDate = (dateString) => {
   if (!dateString) return "N/A";

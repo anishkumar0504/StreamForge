@@ -11,9 +11,9 @@ const recordView = async (req, res) => {
     const { watchDuration } = req.body;
 
     console.log("\n========== RECORD VIEW REQUEST ==========");
-    console.log("📹 Video ID:", videoId);
-    console.log("👤 User ID:", userId);
-    console.log("⏱️ Watch Duration:", watchDuration);
+    console.log(" Video ID:", videoId);
+    console.log(" User ID:", userId);
+    console.log(" Watch Duration:", watchDuration);
 
     //  Validate duration
     if (typeof watchDuration !== "number" || watchDuration < 0) {
@@ -52,7 +52,7 @@ const recordView = async (req, res) => {
 
     if (video.duration) {
       const percentWatched = watchDuration / video.duration;
-      console.log(`📊 Percent watched: ${(percentWatched * 100).toFixed(1)}%`);
+      console.log(` Percent watched: ${(percentWatched * 100).toFixed(1)}%`);
       
       qualifiesForView =
         qualifiesForView ||
@@ -165,7 +165,7 @@ const recordView = async (req, res) => {
         ? "View counted / progress saved"
         : "Watch progress recorded",
       viewCounted: result.viewIncremented,
-      viewCount: result.newViewCount, // Added: Return the actual view count
+      viewCount: result.newViewCount, 
     });
 
   } catch (err) {

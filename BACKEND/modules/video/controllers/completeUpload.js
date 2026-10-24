@@ -68,7 +68,6 @@ const completeUpload = async (req, res) => {
       });
     }
 
-    //UPDATE STATUS
    //UPDATE STATUS
 const updatedVideo = await prisma.video.update({
   where: { id: videoId },

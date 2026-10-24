@@ -140,7 +140,7 @@ await prisma.video.create({
     userId: userId,
     status: "UPLOADING",
     originalFileUrl: `raw/${videoId}/${originalName}`,
-    fileSize: fileSize ? String(fileSize) : null, // ✅ Convert to string or null
+    fileSize: fileSize ? String(fileSize) : null, 
     mimeType: mimeType,
     originalName: originalName,
     uploadProgress: 0,

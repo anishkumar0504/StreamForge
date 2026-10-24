@@ -63,7 +63,7 @@ async function fixViewCounts() {
 
       // Check if needs fixing
       if (actualViews !== recordedViews) {
-        console.log(`📹 ${video.title}`);
+        console.log(` ${video.title}`);
         console.log(`   Recorded: ${recordedViews} views`);
         console.log(`   Actual: ${actualViews} views`);
         console.log(`   Difference: ${actualViews - recordedViews}`);
@@ -74,7 +74,7 @@ async function fixViewCounts() {
           data: { views: actualViews },
         });
 
-        console.log(`   ✅ Fixed! Updated to ${actualViews} views\n`);
+        console.log(` Fixed! Updated to ${actualViews} views\n`);
         fixedCount++;
       } else {
         correctCount++;
@@ -86,17 +86,17 @@ async function fixViewCounts() {
     console.log("SUMMARY");
     console.log("======================================\n");
     console.log(`Total videos checked: ${videos.length}`);
-    console.log(`✅ Already correct: ${correctCount}`);
-    console.log(`🔧 Fixed: ${fixedCount}`);
+    console.log(` Already correct: ${correctCount}`);
+    console.log(`Fixed: ${fixedCount}`);
 
     if (fixedCount === 0) {
-      console.log("\n🎉 All view counts were already correct!");
+      console.log("\n All view counts were already correct!");
     } else {
-      console.log(`\n✅ Successfully fixed ${fixedCount} video(s)!`);
+      console.log(`\n Successfully fixed ${fixedCount} video(s)!`);
     }
 
   } catch (error) {
-    console.error("\n❌ Error:", error.message);
+    console.error("\n Error:", error.message);
     console.error(error);
   } finally {
     await prisma.$disconnect();

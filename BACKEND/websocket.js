@@ -6,7 +6,7 @@ let io
 const initializeWebSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: true, // allow all origins
+      origin: true,
       methods: ["GET", "POST"],
     },
   })
@@ -50,7 +50,7 @@ module.exports = {
   emitToUser,
   emitVideoUpdate,
 }
-// ADD FROM HERE ↓
+// ADD FROM 
 const Redis = require("ioredis");
 
 const subscriber = new Redis({
