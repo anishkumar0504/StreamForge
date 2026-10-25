@@ -49,6 +49,7 @@ module.exports = {
       const rawQuery = (req.query.q || "").trim();
       const type = req.query.type || "all";
       const limit = Math.min(Number(req.query.limit) || 20, 50);
+      const MAX_POOL = limit * 5;
 
       if (!rawQuery) {
         return res.status(400).json({ error: "Query required" });
@@ -58,39 +59,17 @@ module.exports = {
       const parsedQuery = queryParser.parse(rawQuery);
 
       /* ---------- Phase 3: Candidate Generation ---------- */
+
       const {
         videoCandidates,
         channelCandidates
       } = await searchService.generateCandidates(parsedQuery, type);
-
       /* ---------- Phase 4: Fetch Full Data with Relations ---------- */
       let videos = [];
       let channels = [];
 
       if (videoCandidates.length && type !== "channel") {
-        videos = await prisma.video.findMany({
-          where: { id: { in: videoCandidates } },
-          select: {
-            id: true,
-            title: true,
-            description: true,
-            thumbnailUrl: true,
-            duration: true,
-            views: true,
-            createdAt: true,
-            userId: true,
-            //  Include channel/user information
-            user: {
-              select: {
-                id: true,
-                username: true,
-                displayName: true,
-                avatarUrl: true,
-                isVerified: true
-              }
-            }
-          }
-        });
+      videos = videoCandidates; // rows already carry id, views, createdAt, userId
       }
 
       if (channelCandidates.length && type !== "video") {
@@ -114,7 +93,6 @@ module.exports = {
           }
         });
       }
-
       /* ---------- Phase 5: Ranking ---------- */
       const rankedVideos =
         type !== "channel"
@@ -125,7 +103,6 @@ module.exports = {
         type !== "video"
           ? rankingService.rankChannels(channels)
           : [];
-
       /* ---------- Phase 6: Personalization ---------- */
       const userContext = await buildUserContext(req.user?.id);
 
@@ -144,9 +121,22 @@ module.exports = {
               userContext
             )
           : [];
-
+let hydratedVideos = [];
+if (type !== "channel" && personalizedVideos.length) {
+  const top = personalizedVideos.slice(0, MAX_POOL);
+  const full = await prisma.video.findMany({
+    where: { id: { in: top.map(v => v.id) } },
+    select: {
+      id: true, title: true, description: true, thumbnailUrl: true,
+      duration: true, views: true, createdAt: true, userId: true,
+      user: { select: { id: true, username: true, displayName: true, avatarUrl: true, isVerified: true } }
+    }
+  });
+  const byId = new Map(full.map(v => [v.id, v]));
+  hydratedVideos = top.map(v => ({ ...byId.get(v.id), score: v.score })).filter(v => v.id);
+}
       /* ---------- Phase 7: Transform Data for Frontend ---------- */
-      const transformedVideos = personalizedVideos.map(video => ({
+      const transformedVideos = hydratedVideos.map(video => ({
         id: video.id,
         title: video.title,
         description: video.description,
@@ -180,7 +170,7 @@ module.exports = {
       }));
 
       /* ---------- Phase 8: Safety Trim (IMPORTANT) ---------- */
-      const MAX_POOL = limit * 5;
+      // const MAX_POOL = limit * 5;
       const safeVideos = transformedVideos.slice(0, MAX_POOL);
       const safeChannels = transformedChannels.slice(0, MAX_POOL);
 
