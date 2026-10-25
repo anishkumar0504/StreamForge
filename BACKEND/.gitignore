@@ -3,3 +3,10 @@ node_modules
 .env
 
 /generated/prisma
+
+logs/
+before*.json
+after*.json
+base*.json
+final.json
+api-log.txt
